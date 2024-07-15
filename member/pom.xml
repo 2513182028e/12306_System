@@ -29,15 +29,25 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-
-
+        <dependency>
+            <groupId>SpringCloud</groupId>
+            <artifactId>comcn</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.14.0</version>
+        </dependency>
 
     </dependencies>
 
 
     <build>
         <plugins>
+
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

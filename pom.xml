@@ -18,6 +18,9 @@
         <module>member</module>
         <module>comcn</module>
         <module>gateway</module>
+        <module>generator</module>
+        <module>business</module>
+        <module>batch</module>
     </modules>
 
 
@@ -47,6 +50,41 @@
             <artifactId>aspectjweaver</artifactId>
             <version>1.9.21</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.pagehelper/pagehelper-spring-boot-starter -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.4.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <version>3.5.5</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>tk.mybatis</groupId>-->
+<!--            <artifactId>mapper</artifactId>-->
+<!--            <version>4.15</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.15</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -55,8 +93,15 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.6.3</version>
+            <version>5.7.10</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.14.0</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -106,6 +151,8 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+
         </plugins>
     </build>
 

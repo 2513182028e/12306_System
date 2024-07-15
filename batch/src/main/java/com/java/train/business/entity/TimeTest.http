@@ -1,0 +1,17 @@
+POST http://localhost:8005/batch/admin/job/delete
+Content-Type: application/json
+
+{
+  "group": "A",
+  "name": "TestJob",
+  "description": "定时任务测试",
+  "cronExpression": "1/5 * * * * ?"
+}
+
+###
+POST http://localhost:8005/batch/admin/job/pauseAll
+Content-Type: application/json
+
+{}
+
+###

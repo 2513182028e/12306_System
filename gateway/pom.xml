@@ -23,7 +23,12 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
             <version>4.1.0</version>
-
+        </dependency>
+        <dependency>
+            <groupId>SpringCloud</groupId>
+            <artifactId>comcn</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
 
