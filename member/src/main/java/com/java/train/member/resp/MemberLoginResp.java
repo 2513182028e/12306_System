@@ -1,4 +1,4 @@
-package com.java.train.member.Resp;
+package com.java.train.member.resp;
 
 import lombok.Data;
 

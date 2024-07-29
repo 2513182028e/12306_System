@@ -28,14 +28,14 @@ public class ServerGenerator {
 //    }
 
     public static void main(String[] args) throws TemplateException, IOException {
-        String module="business";
-        String name="Station";
+        String module="member";
+        String name="Ticket";
         genMapper(module,"mapper",name);    //生成mapper
         genService(module,"service",name);  //生成service
         //genReq(module,"req",name);          //生成req
         //genResp(module,"resp",name);        //生成resp
         genServiceImpl(module,"service",name);//生成ServiceImpl
-        genController(module,"controller",name); //生产controller
+        //genController(module,"controller",name); //生产controller
 
     }
     private static void  genController(String module, String lei, String name) throws IOException, TemplateException {

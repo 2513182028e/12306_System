@@ -3,11 +3,12 @@ package com.java.train.business.entity;
 import lombok.Data;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @ToString
-public class DailyTrain {
+public class DailyTrain implements Serializable {
 
     private Long id;
 

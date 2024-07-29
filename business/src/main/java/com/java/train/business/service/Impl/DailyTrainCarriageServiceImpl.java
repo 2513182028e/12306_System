@@ -114,4 +114,14 @@ public class DailyTrainCarriageServiceImpl extends ServiceImpl<DailyTrainCarriag
         LOG.info("生成日期【{}】车次【{}】的车厢信息结束", DateUtil.formatDate(date), code);
 
     }
+
+
+    public  List<DailyTrainCarriage> selectBySeatType(Date date,String trainCode,String seatType)
+    {
+        QueryWrapper<DailyTrainCarriage> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("date",date)
+                .eq("train_code",trainCode)
+                .eq("seat_type",seatType);
+        return DailyTrainCarriagemapper.selectList(queryWrapper);
+    }
 }

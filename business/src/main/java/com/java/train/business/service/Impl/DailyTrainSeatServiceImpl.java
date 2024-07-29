@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.java.train.business.entity.DailyTrainCarriage;
 import com.java.train.business.entity.TrainSeat;
 import com.java.train.business.service.DailyTrainSeatService;
 import com.java.train.common.resp.PageResp;
@@ -127,5 +128,15 @@ public class DailyTrainSeatServiceImpl extends ServiceImpl<DailyTrainSeatMapper,
                 return  -1;
         }
         return (int)aLong;
+    }
+
+    public  List<DailyTrainSeat> selectByCarriage(Date date, String trainCode, Integer carriageIndex)
+    {
+        QueryWrapper<DailyTrainSeat> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("date",date)
+                .eq("train_code",trainCode)
+                .eq("carriage_index",carriageIndex)
+                .orderByAsc("carriage_seat_index");
+        return DailyTrainSeatmapper.selectList(queryWrapper);
     }
 }

@@ -1,8 +1,9 @@
 package com.java.train.business.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TrainSeat {
+public class TrainSeat  implements Serializable {
     private Long id;
 
     private String trainCode;       // 车次编号

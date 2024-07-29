@@ -13,7 +13,6 @@ import java.util.Date;
 public class Passenger {
 
     @TableId("id")
-
     private  Long id;
     @TableField("member_id")
     private Long member_id;

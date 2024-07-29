@@ -5,12 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @ToString
 @TableName("train")
-public class Train {
+public class Train implements Serializable {
     @TableId("id")
     private Long id;
 

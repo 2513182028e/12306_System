@@ -10,7 +10,7 @@ import com.github.pagehelper.PageInfo;
 import com.java.train.common.context.LoginMemberContext;
 import com.java.train.common.resp.PageResp;
 import com.java.train.common.util.ShowUtil;
-import com.java.train.member.Resp.PassengerQueryResp;
+import com.java.train.member.resp.PassengerQueryResp;
 import com.java.train.member.entity.Passenger;
 import com.java.train.member.mapper.PassengerMapper;
 import com.java.train.member.req.PassengerQueryReq;
@@ -18,7 +18,6 @@ import com.java.train.member.req.PassengerSaveReq;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

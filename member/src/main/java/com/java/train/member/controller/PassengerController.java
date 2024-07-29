@@ -2,10 +2,9 @@ package com.java.train.member.controller;
 
 
 import com.java.train.common.context.LoginMemberContext;
-import com.java.train.common.req.PageReq;
 import com.java.train.common.resp.CommonResp;
 import com.java.train.common.resp.PageResp;
-import com.java.train.member.Resp.PassengerQueryResp;
+import com.java.train.member.resp.PassengerQueryResp;
 import com.java.train.member.req.PassengerQueryReq;
 import com.java.train.member.req.PassengerSaveReq;
 import com.java.train.member.service.PassengerServiceImpl;

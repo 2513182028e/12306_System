@@ -1,11 +1,19 @@
 package com.java.train.business.service.Impl;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.EnumUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.java.train.business.entity.DailyTrain;
+import com.java.train.business.entity.TrainStation;
+import com.java.train.business.enums.SeatTypeEnum;
+import com.java.train.business.enums.TrainTypeEnum;
 import com.java.train.business.service.DailyTrainTicketService;
 import com.java.train.common.resp.PageResp;
 import com.java.train.common.util.ShowUtil;
@@ -18,6 +26,12 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 @Service
 public class DailyTrainTicketServiceImpl extends ServiceImpl<DailyTrainTicketMapper,DailyTrainTicket> implements DailyTrainTicketService {
@@ -29,6 +43,12 @@ public class DailyTrainTicketServiceImpl extends ServiceImpl<DailyTrainTicketMap
 
     @Resource
     private DailyTrainTicketMapper DailyTrainTicketmapper;
+
+    @Resource
+    private TrainStationServiceImpl trainStationService;
+
+    @Resource
+    private  DailyTrainSeatServiceImpl dailyTrainSeatService;
 
 
 
@@ -72,5 +92,97 @@ public class DailyTrainTicketServiceImpl extends ServiceImpl<DailyTrainTicketMap
 
     public void delete(Long id) {
         DailyTrainTicketmapper.deleteById(id);
+    }
+
+
+    @Transactional
+    public void  genDaily(DailyTrain dailyTrain, Date date,String trainCode)
+    {
+        LOG.info("生成日期【{}】车次【{}】的余票信息开始", DateUtil.formatDate(date), trainCode);
+        //删除某日某车次的余票信息
+        QueryWrapper<DailyTrainTicket> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("date",date)
+                .eq("train_code",trainCode);
+        DailyTrainTicketmapper.delete(queryWrapper);
+
+        //查出该车次对应的所有的车站信息
+        List<TrainStation> trainStationList = trainStationService.selectByTrainCode(trainCode);
+        if(CollUtil.isEmpty(trainStationList))
+        {
+            LOG.info("该车次没有车站基础数据，生成该车次的余票信息结束");
+            return;
+        }
+        DateTime now = new DateTime();
+        for (int i=0;i<trainStationList.size();i++)
+        {
+            TrainStation trainStationStart = trainStationList.get(i);
+            BigDecimal sumKM = BigDecimal.ZERO;
+            for(int j=i+1;j<trainStationList.size();j++)
+            {
+                TrainStation trainStationEnd = trainStationList.get(j);
+                sumKM=sumKM.add(trainStationEnd.getKm());
+                DailyTrainTicket dailyTrainTicket = new DailyTrainTicket();
+                dailyTrainTicket.setId(ShowUtil.getSnowflakeNextId());
+                dailyTrainTicket.setDate(date);
+                dailyTrainTicket.setTrainCode(trainCode);
+                dailyTrainTicket.setStart(trainStationStart.getName());
+                dailyTrainTicket.setStartPinyin(trainStationStart.getNamePinyin());
+                dailyTrainTicket.setStartTime(trainStationStart.getOutTime());
+                dailyTrainTicket.setStartIndex(trainStationStart.getIndex());
+                dailyTrainTicket.setEnd(trainStationEnd.getName());
+                dailyTrainTicket.setEndPinyin(trainStationEnd.getNamePinyin());
+                dailyTrainTicket.setEndTime(trainStationEnd.getInTime());
+                dailyTrainTicket.setEndIndex(trainStationEnd.getIndex());
+                int ydz=dailyTrainSeatService.countSeat(date,trainCode, SeatTypeEnum.YDZ.getCode());
+                int edz=dailyTrainSeatService.countSeat(date,trainCode,SeatTypeEnum.EDZ.getCode());
+                int rw=dailyTrainSeatService.countSeat(date,trainCode,SeatTypeEnum.RW.getCode());
+                int yw=dailyTrainSeatService.countSeat(date,trainCode,SeatTypeEnum.YW.getCode());
+
+                //票价=里程之和*座位单价*车次类型系数
+                String trainType=dailyTrain.getType();
+                BigDecimal priceRate = null; ;
+                for (TrainTypeEnum trainTypeEnum:TrainTypeEnum.values()) {
+                    if(trainTypeEnum.getCode().equals(trainType))
+                    {
+                        priceRate=trainTypeEnum.getPriceRate();
+                        break;
+                    }
+                }
+                BigDecimal ydzPrice = sumKM.multiply(SeatTypeEnum.YDZ.getPrice()).multiply(priceRate).setScale(2, RoundingMode.HALF_UP);
+                BigDecimal edzPrice = sumKM.multiply(SeatTypeEnum.EDZ.getPrice()).multiply(priceRate).setScale(2, RoundingMode.HALF_UP);
+                BigDecimal rwPrice = sumKM.multiply(SeatTypeEnum.RW.getPrice()).multiply(priceRate).setScale(2, RoundingMode.HALF_UP);
+                BigDecimal ywPrice = sumKM.multiply(SeatTypeEnum.YW.getPrice()).multiply(priceRate).setScale(2, RoundingMode.HALF_UP);
+                dailyTrainTicket.setYdz(ydz);
+                dailyTrainTicket.setYdzPrice(ydzPrice);
+                dailyTrainTicket.setEdz(edz);
+                dailyTrainTicket.setEdzPrice(edzPrice);
+                dailyTrainTicket.setRw(rw);
+                dailyTrainTicket.setRwPrice(rwPrice);
+                dailyTrainTicket.setYw(yw);
+                dailyTrainTicket.setYwPrice(ywPrice);
+                dailyTrainTicket.setCreateTime(now);
+                dailyTrainTicket.setUpdateTime(now);
+                DailyTrainTicketmapper.insert(dailyTrainTicket);
+            }
+            LOG.info("生成日期【{}】车次【{}】的余票信息结束", DateUtil.formatDate(date), trainCode);
+        }
+
+    }
+
+    public DailyTrainTicket  selectByUnique(Date date,String trainCode,String start,String end)
+    {
+            QueryWrapper<DailyTrainTicket> queryWrapper=new QueryWrapper<>();
+            queryWrapper.eq("date",date)
+                    .eq("train_code",trainCode)
+                    .eq("start",start)
+                    .eq("end",end);
+        List<DailyTrainTicket> lists = DailyTrainTicketmapper.selectList(queryWrapper);
+        if(CollUtil.isNotEmpty(lists))
+        {
+            return lists.get(0);
+        }
+        else {
+            return  null;
+        }
     }
 }

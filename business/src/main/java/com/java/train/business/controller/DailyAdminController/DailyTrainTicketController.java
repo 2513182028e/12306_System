@@ -15,23 +15,23 @@ public class DailyTrainTicketController {
 
     @Resource
     private DailyTrainTicketServiceImpl DailyTrainTicketService;
-
-    @PostMapping("/save")
-    public CommonResp<Object> save(@Valid @RequestBody DailyTrainTicketSaveReq req) {
-        DailyTrainTicketService.save(req);
-        return new CommonResp<>();
-    }
+//
+//    @PostMapping("/save")
+//    public CommonResp<Object> save(@Valid @RequestBody DailyTrainTicketSaveReq req) {
+//        DailyTrainTicketService.save(req);
+//        return new CommonResp<>();
+//    }
 
     @GetMapping("/query-list")
     public CommonResp<PageResp<DailyTrainTicketQueryResp>> queryList(@Valid DailyTrainTicketQueryReq req) {
         PageResp<DailyTrainTicketQueryResp> list = DailyTrainTicketService.queryList(req);
         return new CommonResp<>(list);
     }
-
-    @DeleteMapping("/delete/{id}")
-    public CommonResp<Object> delete(@PathVariable Long id) {
-        DailyTrainTicketService.delete(id);
-        return new CommonResp<>();
-    }
+//
+//    @DeleteMapping("/delete/{id}")
+//    public CommonResp<Object> delete(@PathVariable Long id) {
+//        DailyTrainTicketService.delete(id);
+//        return new CommonResp<>();
+//    }
 
 }
